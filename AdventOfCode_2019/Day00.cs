@@ -29,12 +29,6 @@ namespace AdventOfCode_2019
         {
             if (DirectInput != null)
             {
-                logger.LogInformation($"Using direct input.");
-                if (DirectInput == null)
-                {
-                    throw new InvalidOperationException($"No input file or direct input found for {this}");
-                }
-
                 foreach (var line in DirectInput)
                 {
                     yield return line;
@@ -45,13 +39,12 @@ namespace AdventOfCode_2019
                 var inputFile = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), InputFile, new EnumerationOptions() { RecurseSubdirectories = true }).FirstOrDefault();
                 logger.LogInformation($"Using input file {inputFile}");
                 using var file = new StreamReader(inputFile);
-                string line;
 
+                string line;
                 while ((line = file.ReadLine()) != null)
                 {
                     yield return line;
                 }
-
             }
         }
 

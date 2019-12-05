@@ -64,7 +64,6 @@ namespace AdventOfCode_2019.Week01
             }
 
             // Solution Part 2: Noun: 52 Verb: 8
-
             throw new InvalidOperationException($"Solution Part 2: Noun: 52 Verb: 8 but No noun/verb combination returned {target} target value.");
         }
     }
