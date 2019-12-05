@@ -8,6 +8,8 @@ namespace AdventOfCode_2019
 {
     public class AdventOfCode
     {
+        public static ILoggerFactory LogFactory;
+
         public static void Main(string[] args)
         {
             using var scope = ConfigureServices().CreateScope();
@@ -36,6 +38,7 @@ namespace AdventOfCode_2019
             var serviceProvider = services.BuildServiceProvider();
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
             services.AddSingleton(typeof(ILogger), logger);
+            LogFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
 
             services.AddTransient<Day01>();
             services.AddTransient<Day02>();

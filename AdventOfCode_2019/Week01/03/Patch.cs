@@ -3,9 +3,12 @@ using System.Linq;
 
 namespace AdventOfCode_2019.Week01
 {
-    public struct Patch
+    /// <summary>
+    /// A line on a 2d plane.
+    /// </summary>
+    public struct WireSection
     {
-        public Patch((int X, int Y) start, string patch)
+        public WireSection((int X, int Y) start, string patch)
         {
             Value = patch;
             Length = int.Parse(patch.Substring(1));
@@ -50,9 +53,15 @@ namespace AdventOfCode_2019.Week01
 
         public bool Vertical => !Horizontal;
 
-        public bool Intersects(Patch other, out (int X, int Y) cross)
+        /// <summary>
+        /// Finds intersections of two wires.
+        /// </summary>
+        /// <param name="other">The <see cref="WireSection"/> to check for intersections.</param>
+        /// <param name="pointOfIntersection">The X,Y coordinates of the intersection.</param>
+        /// <returns>True if an intersection exists, false otherwise.</returns>
+        public bool Intersects(WireSection other, out (int X, int Y) pointOfIntersection)
         {
-            cross = (0, 0);
+            pointOfIntersection = (0, 0);
             if (X1 == X2)
             {
                 var horizontal =
@@ -61,7 +70,7 @@ namespace AdventOfCode_2019.Week01
 
                 if (horizontal)
                 {
-                    cross = (X1, other.Y1);
+                    pointOfIntersection = (X1, other.Y1);
                 }
 
                 return horizontal;
@@ -75,7 +84,7 @@ namespace AdventOfCode_2019.Week01
 
                 if (vertical)
                 {
-                    cross = (other.X1, Y2);
+                    pointOfIntersection = (other.X1, Y2);
                 }
 
                 return vertical;

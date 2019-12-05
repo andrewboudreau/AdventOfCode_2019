@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace AdventOfCode_2019.Week01
 {
+    /// <summary>
+    /// Contains a collection <see cref="WireSection"/> that are connected end-to-end on a 2d grid.
+    /// </summary>
     public class Wire
     {
         public Wire(string wire)
@@ -15,12 +18,12 @@ namespace AdventOfCode_2019.Week01
 
         (int X, int Y) Current { get; set; }
 
-        List<Patch> Patches { get; } = new List<Patch>();
+        List<WireSection> Sections { get; } = new List<WireSection>();
 
         public void AddPatch(string patch)
         {
-            var section = new Patch(Current, patch);
-            Patches.Add(section);
+            var section = new WireSection(Current, patch);
+            Sections.Add(section);
             Current = (section.X2, section.Y2);
         }
 
@@ -29,27 +32,29 @@ namespace AdventOfCode_2019.Week01
             var otherSteps = 0;
             var mySteps = 0;
 
-            foreach (var other in otherWire.Patches)
+            foreach (var other in otherWire.Sections)
             {
-                foreach (var mine in Patches)
+                foreach (var mine in Sections)
                 {
-                    if (mine.Intersects(other, out var cross))
+                    if (mine.Intersects(other, out var pointOfIntersection))
                     {
-                        if (cross.X == 0 && cross.Y == 0)
+                        if (pointOfIntersection.X == 0 && pointOfIntersection.Y == 0)
                         {
                             continue;
                         }
 
-                        var steps = otherSteps + mySteps;
-                        steps += Math.Abs(mine.Horizontal ?
-                             mine.X2 - cross.X :
-                             mine.Y2 - cross.Y);
+                        var myPartial = Math.Abs(
+                            mine.Horizontal ?
+                                mine.Y1 - pointOfIntersection.Y :
+                                mine.X1 - pointOfIntersection.X);
 
-                        steps += Math.Abs(other.Horizontal ?
-                            other.X2 - cross.X :
-                            other.Y2 - cross.Y);
+                        var otherPartial = Math.Abs(
+                            other.Horizontal ?
+                                other.Y1 - pointOfIntersection.Y :
+                                other.X1 - pointOfIntersection.X);
 
-                        yield return (cross.X, cross.Y, steps);
+                        var steps = otherSteps + otherPartial + mySteps + myPartial;
+                        yield return (pointOfIntersection.X, pointOfIntersection.Y, steps);
                     }
 
                     mySteps += mine.Length;
