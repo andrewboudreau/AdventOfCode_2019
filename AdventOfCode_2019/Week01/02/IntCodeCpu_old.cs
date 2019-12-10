@@ -6,35 +6,33 @@ using Microsoft.Extensions.Logging;
 
 namespace AdventOfCode_2019.Week01
 {
-    class IntCodeCpu
+    class IntCodeCpu_old
     {
         private readonly ILogger logger;
 
         private int[] memory;
         private int pc = 0;
 
-        public IntCodeCpu(ILogger<IntCodeCpu> logger)
+        public IntCodeCpu_old(ILogger<IntCodeCpu_old> logger)
         {
             this.logger = logger;
         }
 
-        public IntCodeCpu(IEnumerable<int> memory, ILogger logger)
+        public IntCodeCpu_old(IEnumerable<int> memory, ILogger logger)
         {
             this.memory = memory.ToArray();
             this.logger = logger;
         }
 
-        public int this[int index]
+        public int this[int index] 
         {
-            get
-            {
+            get {
                 return memory[index];
-            }
-        }
+            } }
 
         public long Steps { get; private set; } = 0;
 
-        public IntCodeCpu Load(IEnumerable<int> memory)
+        public IntCodeCpu_old Load(IEnumerable<int> memory)
         {
             this.memory = memory.ToArray();
             pc = 0;
@@ -43,7 +41,7 @@ namespace AdventOfCode_2019.Week01
             return this;
         }
 
-        public IntCodeCpu Patch(int index, int value)
+        public IntCodeCpu_old Patch(int index, int value)
         {
             logger.LogInformation($"Patched program at Memory[{index}] = '{value}' from '{memory[index]}'");
 
@@ -112,10 +110,4 @@ namespace AdventOfCode_2019.Week01
         }
     }
 
-    public enum Operations
-    {
-        Add = 1,
-        Multiply = 2,
-        Halt = 99
-    }
 }

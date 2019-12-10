@@ -11,7 +11,11 @@ namespace AdventOfCode_2019.Week01
         public Day02(IServiceProvider serviceProvider, ILogger<Day02> logger)
             : base(serviceProvider, logger)
         {
-            //// DirectInput = new[] { "1,1,1,4,99,5,6,0,99" };
+            // DirectInput = new[] { "1,0,0,0,99" };
+            // DirectInput = new[] { "2,3,0,3,99" };
+            // DirectInput = new[] { "1,9,10,3,2,3,11,0,99,30,40,50" };
+            // DirectInput = new[] { "1,1,1,4,99,5,6,0,99" };
+            // DirectInput = new[] { "2,4,4,5,99,0" };
         }
 
         protected override string Solve(IEnumerable<string> inputs)
@@ -25,24 +29,6 @@ namespace AdventOfCode_2019.Week01
             }
 
             return result.ToString();
-        }
-
-        private int RunProgram(IEnumerable<int> program, int noun, int verb)
-        {
-            var cpu = ServiceProvider.GetRequiredService<IntCodeCpu>();
-
-            cpu.Load(program)
-                .Patch(1, noun)
-                .Patch(2, verb);
-
-            logger.LogDebug($"Start {cpu.DumpMemory()}");
-
-            cpu.RunTillHalt();
-
-            logger.LogDebug($"Executed {cpu.Steps} operations.");
-            logger.LogDebug($"End {cpu.DumpMemory()}");
-
-            return cpu[0];
         }
 
         protected override string Solve2(IEnumerable<string> inputs)
@@ -65,6 +51,24 @@ namespace AdventOfCode_2019.Week01
 
             // Solution Part 2: Noun: 52 Verb: 8
             throw new InvalidOperationException($"Solution Part 2: Noun: 52 Verb: 8 but No noun/verb combination returned {target} target value.");
+        }
+
+        private int RunProgram(IEnumerable<int> program, int noun, int verb)
+        {
+            var cpu = ServiceProvider.GetRequiredService<IntCodeCpu>();
+
+            cpu.Load(program)
+                .Patch(1, noun)
+                .Patch(2, verb);
+
+            logger.LogDebug($"Start {cpu.DumpMemory()}");
+
+            cpu.RunTillHalt();
+
+            logger.LogDebug($"Executed {cpu.Steps} operations.");
+            logger.LogDebug($"End {cpu.DumpMemory()}");
+
+            return cpu[0];
         }
     }
 }

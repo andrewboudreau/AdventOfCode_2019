@@ -16,24 +16,18 @@ namespace AdventOfCode_2019
             var serviceProvider = scope.ServiceProvider;
 
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
-            try
-            {
-                var day = serviceProvider.GetRequiredService<Day04>();
-                logger.LogInformation($"Solution: {day.Solve()}");
-                logger.LogInformation($"Solution Part 2: {day.Solve2()}");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, ex.Message);
-                throw;
-            }
+            
+            var day = serviceProvider.GetRequiredService<Day06>();
+
+            logger.LogInformation($"Solution: {day.Solve()}");
+            logger.LogInformation($"Solution Part 2: {day.Solve2()}");
 
             Console.ReadKey();
         }
 
         private static ServiceProvider ConfigureServices(ServiceCollection services)
         {
-            services.AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Information));
+            services.AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Debug));
 
             var serviceProvider = services.BuildServiceProvider();
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
@@ -44,6 +38,9 @@ namespace AdventOfCode_2019
             services.AddTransient<Day02>();
             services.AddTransient<Day03>();
             services.AddTransient<Day04>();
+            services.AddTransient<Day05>();
+            services.AddTransient<Day06>();
+            services.AddTransient(sp => new IntCodeCpu_old(sp.GetRequiredService<ILogger<IntCodeCpu_old>>()));
             services.AddTransient(sp => new IntCodeCpu(sp.GetRequiredService<ILogger<IntCodeCpu>>()));
 
             return services.BuildServiceProvider();
