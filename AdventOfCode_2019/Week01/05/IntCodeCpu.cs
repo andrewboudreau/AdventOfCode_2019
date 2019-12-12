@@ -41,7 +41,7 @@ namespace AdventOfCode_2019.Week01
             pc = 0;
             steps = 0;
 
-            logger.LogInformation($"Loaded program {this.memory.Length.ToString("N0")} bytes.");
+            logger.LogInformation($"Loaded program {this.memory.Length:N0} bytes.");
             return this;
         }
 
@@ -163,9 +163,7 @@ namespace AdventOfCode_2019.Week01
 
         public void RunTillHalt()
         {
-            while (Step())
-            {
-            }
+            while (Step()) { }
         }
 
         public IntCodeCpu UseConstantValueForInput(int value)
@@ -184,5 +182,10 @@ namespace AdventOfCode_2019.Week01
         {
             return string.Join(',', memory);
         }
+    }
+
+    public static class InstructionSpecifications
+    {
+
     }
 }
