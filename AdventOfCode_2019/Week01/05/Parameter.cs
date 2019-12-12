@@ -5,12 +5,16 @@
         public int Address;
         public int Value;
         public ParameterMode Mode;
-        public int Order;
+        public int ResolvedValue;
 
         public override string ToString()
         {
-            var prefix = ParameterMode.Immediate == Mode ? "#" : "$";
-            return prefix + Value;
+            if(Mode == ParameterMode.Immediate)
+            {
+                return "#" + Value;
+            }
+            
+            return $"[${Value}]=>{ResolvedValue}";
         }
     }
 }

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 namespace AdventOfCode_2019.Week01
 {
-    public struct Instruction
+    public partial struct Instruction
     {
         public readonly int Address;
+        public readonly int OperationCode; 
         public readonly Operations Operation;
         public readonly int Size;
 
@@ -17,8 +18,8 @@ namespace AdventOfCode_2019.Week01
             const int opcodeSize = 1;
             Address = address;
 
-            var opcode = memory.Read(address, ParameterMode.Immediate);
-            Operation = (Operations)(opcode % 100);
+            OperationCode = memory.Read(address, ParameterMode.Immediate);
+            Operation = (Operations)(OperationCode % 100);
 
             Size = InstructionSizeLookup(Operation);
             ParameterCount = ParameterCountLookup(Operation);
@@ -26,7 +27,7 @@ namespace AdventOfCode_2019.Week01
 
             for (var i = 0; i < ParameterCount; i++)
             {
-                var parameterCodes = opcode / 100;
+                var parameterCodes = OperationCode / 100;
                 var parameterAddress = i + (address + opcodeSize);
                 int divider = (int)Math.Pow(10, i);
                 int parameterBit = parameterCodes / divider;
@@ -38,7 +39,7 @@ namespace AdventOfCode_2019.Week01
                     Address = parameterAddress,
                     Value = memory[parameterAddress],
                     Mode = parameterMode,
-                    Order = i,
+                    ResolvedValue = memory.Read(parameterAddress, parameterMode)
                 };
 
                 Parameters.Add(parameter);
@@ -51,7 +52,13 @@ namespace AdventOfCode_2019.Week01
             {
                 case Operations.Add:
                 case Operations.Multiply:
+                case Operations.Equals:
+                case Operations.Less_Than:
                     return 3;
+
+                case Operations.Jump_If_False:
+                case Operations.Jump_If_True:
+                    return 2;
 
                 case Operations.Input:
                 case Operations.Output:
@@ -67,32 +74,13 @@ namespace AdventOfCode_2019.Week01
 
         public string Decompile()
         {
-            var msg = $"{Address.ToString().PadLeft(5, '0')}: {Operation} {string.Join(", ", Parameters)}"; return msg;
+            var msg = $"{Address.ToString().PadLeft(3, '0')}: {OperationCode.ToString().PadLeft(4, '0')} {Operation} {string.Join(", ", Parameters)}"; 
+            return msg;
         }
 
         public override string ToString()
         {
             return Decompile();
-        }
-
-        private static int InstructionSizeLookup(Operations operation)
-        {
-            switch (operation)
-            {
-                case Operations.Add:
-                case Operations.Multiply:
-                    return 4;
-
-                case Operations.Input:
-                case Operations.Output:
-                    return 2;
-
-                case Operations.Halt:
-                    return 1;
-
-                default:
-                    throw new InvalidOperationException($"Unknown Operation '{operation}'.");
-            }
         }
     }
 

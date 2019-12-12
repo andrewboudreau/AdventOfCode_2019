@@ -31,6 +31,10 @@ namespace AdventOfCode_2019.Week01
 
         public int LastOutput { get; private set; }
 
+        public Func<int> ReadNextInputValue { get; private set; }
+
+        public Action<int> WriteNextOutputValue { get; private set; }
+
         public IntCodeCpu Load(IEnumerable<int> memory)
         {
             this.memory = memory.ToArray();
@@ -54,9 +58,10 @@ namespace AdventOfCode_2019.Week01
             try
             {
                 var instruction = new Instruction(pc, memory);
-                logger.LogInformation(instruction.Decompile());
+                logger.LogDebug(instruction.Decompile());
 
-                pc += Execute(instruction);
+                var increment = Execute(instruction);
+                pc += increment;
                 steps += 1;
             }
             catch (HaltException halt)
@@ -85,14 +90,65 @@ namespace AdventOfCode_2019.Week01
                     break;
 
                 case Operations.Input:
-                    Console.WriteLine("Input a value:");
-                    var input = int.Parse(Console.ReadLine());
+                    Console.Write("Input a value: ");
+                    var input = ReadNextInputValue?.Invoke() ?? int.Parse(Console.ReadLine());
+                    Console.WriteLine(input.ToString());
+
                     instruction.WriteOperand1(input, memory);
                     break;
 
                 case Operations.Output:
                     LastOutput = instruction.ReadOperand1(memory);
-                    logger.LogCritical(LastOutput.ToString());
+                    WriteNextOutputValue?.Invoke(LastOutput);
+                    break;
+
+                /*
+                 * 
+                 * Opcode 5 is jump-if-true: if the first parameter is non-zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
+                 * Opcode 6 is jump-if-false: if the first parameter is zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
+               */
+
+                case Operations.Jump_If_True:
+                    if (instruction.ReadOperand1(memory) != 0)
+                    {
+                        pc = instruction.ReadOperand2(memory);
+                        return 0;
+                    }
+
+                    break;
+
+                case Operations.Jump_If_False:
+                    if (instruction.ReadOperand1(memory) == 0)
+                    {
+                        pc = instruction.ReadOperand2(memory);
+                        return 0;
+                    }
+                    break;
+
+                /*
+                 * Opcode 7 is less than: if the first parameter is less than the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
+                 * Opcode 8 is equals: if the first parameter is equal to the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
+                 */
+                case Operations.Less_Than:
+                    if (instruction.ReadOperand1(memory) < instruction.ReadOperand2(memory))
+                    {
+                        instruction.WriteOperand3(1, memory);
+                    }
+                    else
+                    {
+                        instruction.WriteOperand3(0, memory);
+                    }
+                    break;
+
+                case Operations.Equals:
+                    if (instruction.ReadOperand1(memory) == instruction.ReadOperand2(memory))
+                    {
+                        instruction.WriteOperand3(1, memory);
+                    }
+                    else
+                    {
+                        instruction.WriteOperand3(0, memory);
+                    }
                     break;
 
                 case Operations.Halt:
@@ -110,6 +166,18 @@ namespace AdventOfCode_2019.Week01
             while (Step())
             {
             }
+        }
+
+        public IntCodeCpu UseConstantValueForInput(int value)
+        {
+            ReadNextInputValue = () => value;
+            return this;
+        }
+
+        public IntCodeCpu UseLoggingForOutput()
+        {
+            WriteNextOutputValue = (value) => logger.LogWarning($"Output: {value}");
+            return this;
         }
 
         public string DumpMemory()

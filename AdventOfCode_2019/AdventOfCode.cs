@@ -17,17 +17,17 @@ namespace AdventOfCode_2019
 
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
             
-            var day = serviceProvider.GetRequiredService<Day06>();
+            var day = serviceProvider.GetRequiredService<Day05>();
 
-            logger.LogInformation($"Solution: {day.Solve()}");
-            logger.LogInformation($"Solution Part 2: {day.Solve2()}");
+            logger.LogCritical($"Solution: {day.Solve()}");
+            logger.LogCritical($"Solution Part 2: {day.Solve2()}");
 
             Console.ReadKey();
         }
 
         private static ServiceProvider ConfigureServices(ServiceCollection services)
         {
-            services.AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Debug));
+            services.AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Information));
 
             var serviceProvider = services.BuildServiceProvider();
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
@@ -40,6 +40,7 @@ namespace AdventOfCode_2019
             services.AddTransient<Day04>();
             services.AddTransient<Day05>();
             services.AddTransient<Day06>();
+            services.AddTransient<Day07>();
             services.AddTransient(sp => new IntCodeCpu_old(sp.GetRequiredService<ILogger<IntCodeCpu_old>>()));
             services.AddTransient(sp => new IntCodeCpu(sp.GetRequiredService<ILogger<IntCodeCpu>>()));
 

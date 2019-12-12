@@ -27,6 +27,13 @@
     <None Update="Week01\06\6_input.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Week01\07\7_input.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Week02\" />
   </ItemGroup>
 
 </Project>

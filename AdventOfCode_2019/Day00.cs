@@ -53,6 +53,14 @@ namespace AdventOfCode_2019
             return Solve(ReadInput());
         }
 
+        public virtual void AssertExpectedResult(int expected, int actual)
+        {
+            if (expected != actual)
+            {
+                throw new InvalidOperationException($"Expected known correct answer '{expected:N0}' but returned '{actual:N0}'");
+            }
+        }
+
         protected abstract string Solve(IEnumerable<string> inputs);
 
         public virtual string Solve2()
