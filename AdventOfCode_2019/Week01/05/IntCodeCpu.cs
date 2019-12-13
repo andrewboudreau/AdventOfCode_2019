@@ -31,25 +31,32 @@ namespace AdventOfCode_2019.Week01
 
         public int LastOutput { get; private set; }
 
-        public Func<int> ReadNextInputValue { get; private set; }
+        public Func<int> ReadInputValue { get; private set; }
 
-        public Action<int> WriteNextOutputValue { get; private set; }
+        public Action<int> WriteOutputValue { get; private set; }
+        public bool WaitForInput { get; private set; }
 
         public IntCodeCpu Load(IEnumerable<int> memory)
         {
+            Reset();
             this.memory = memory.ToArray();
-            pc = 0;
-            steps = 0;
 
-            logger.LogInformation($"Loaded program {this.memory.Length:N0} bytes.");
+            logger.LogTrace($"Loaded program {this.memory.Length:N0} bytes.");
             return this;
         }
 
         public IntCodeCpu Patch(int index, int value)
         {
-            logger.LogInformation($"Patched program at Memory[{index}] = '{value}' from '{memory[index]}'");
+            logger.LogDebug($"Patched program at Memory[{index}] = '{value}' from '{memory[index]}'");
 
             memory[index] = value;
+            return this;
+        }
+
+        public IntCodeCpu Reset()
+        {
+            pc = 0;
+            steps = 0;
             return this;
         }
 
@@ -58,7 +65,7 @@ namespace AdventOfCode_2019.Week01
             try
             {
                 var instruction = new Instruction(pc, memory);
-                logger.LogDebug(instruction.Decompile());
+                logger.LogTrace(instruction.Decompile());
 
                 var increment = Execute(instruction);
                 pc += increment;
@@ -66,7 +73,7 @@ namespace AdventOfCode_2019.Week01
             }
             catch (HaltException halt)
             {
-                logger.LogInformation(halt.Message);
+                logger.LogTrace(halt.Message);
                 return false;
             }
 
@@ -90,16 +97,32 @@ namespace AdventOfCode_2019.Week01
                     break;
 
                 case Operations.Input:
-                    Console.Write("Input a value: ");
-                    var input = ReadNextInputValue?.Invoke() ?? int.Parse(Console.ReadLine());
-                    Console.WriteLine(input.ToString());
+                    //if (!WaitForInput)
+                    //{
+                    //    WaitForInput = true;
+                    //    return 0;
+                    //};
+
+                    //WaitForInput = false;
+                    int input;
+                    if (ReadInputValue == null)
+                    {
+                        throw new InvalidOperationException("ReadInputValue should not be null");
+                        ////Console.Write("Input a value: ");
+                        ////input = int.Parse(Console.ReadLine());
+                        ////Console.WriteLine(input.ToString());
+                    }
+                    else
+                    {
+                        input = ReadInputValue();
+                    }
 
                     instruction.WriteOperand1(input, memory);
                     break;
 
                 case Operations.Output:
                     LastOutput = instruction.ReadOperand1(memory);
-                    WriteNextOutputValue?.Invoke(LastOutput);
+                    WriteOutputValue?.Invoke(LastOutput);
                     break;
 
                 /*
@@ -161,20 +184,60 @@ namespace AdventOfCode_2019.Week01
             return instruction.Size;
         }
 
-        public void RunTillHalt()
+        public void Run()
         {
-            while (Step()) { }
+            while (Step() && !WaitForInput) { }
         }
 
         public IntCodeCpu UseConstantValueForInput(int value)
         {
-            ReadNextInputValue = () => value;
+            ReadInputValue = () => value;
+            return this;
+        }
+
+        public IntCodeCpu UseSequenceForInput(params int[] value)
+        {
+            var i = 0;
+            ReadInputValue = () =>
+            {
+                logger.LogTrace($"Input: {value[i % value.Length]:N0}");
+                return value[i++ % value.Length];
+            };
+
+            return this;
+        }
+
+        public IntCodeCpu UseInitialValueThenOutputs(int value, IntCodeCpu inputCpu)
+        {
+            var first = false;
+            ReadInputValue = () =>
+            {
+                if (first)
+                {
+                    logger.LogTrace($"Input: {value:N0}");
+                    return value;
+                }
+
+                return inputCpu.LastOutput;
+            };
+
+            return this;
+        }
+
+        public IntCodeCpu UseBufferForOutput(List<int> output)
+        {
+            WriteOutputValue = value =>
+            {
+                logger.LogTrace($"Output : {value:N0}");
+                output.Add(value);
+            };
+
             return this;
         }
 
         public IntCodeCpu UseLoggingForOutput()
         {
-            WriteNextOutputValue = (value) => logger.LogWarning($"Output: {value}");
+            WriteOutputValue = (value) => logger.LogWarning($"Output: {value}");
             return this;
         }
 

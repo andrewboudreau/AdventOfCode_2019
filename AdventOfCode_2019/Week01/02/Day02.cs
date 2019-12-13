@@ -63,7 +63,7 @@ namespace AdventOfCode_2019.Week01
 
             logger.LogDebug($"Start {cpu.DumpMemory()}");
 
-            cpu.RunTillHalt();
+            cpu.Run();
 
             logger.LogDebug($"Executed {cpu.Steps} operations.");
             logger.LogDebug($"End {cpu.DumpMemory()}");

@@ -72,5 +72,12 @@ namespace AdventOfCode_2019
         {
             return "N/A";
         }
+
+        private static string fileGuid = Guid.NewGuid().ToString("N").Substring(0,3);
+
+        static protected void SaveToFile(string msg)
+        {
+            File.AppendAllText($"out-{fileGuid}.txt", msg);
+        }
     }
 }

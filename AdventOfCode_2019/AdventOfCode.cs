@@ -17,7 +17,7 @@ namespace AdventOfCode_2019
 
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
             
-            var day = serviceProvider.GetRequiredService<Day05>();
+            var day = serviceProvider.GetRequiredService<Day07>();
 
             logger.LogCritical($"Solution: {day.Solve()}");
             logger.LogCritical($"Solution Part 2: {day.Solve2()}");
@@ -27,7 +27,7 @@ namespace AdventOfCode_2019
 
         private static ServiceProvider ConfigureServices(ServiceCollection services)
         {
-            services.AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Information));
+            services.AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Debug));
 
             var serviceProvider = services.BuildServiceProvider();
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
