@@ -34,6 +34,7 @@ namespace AdventOfCode_2019.Week01
         public Func<int> ReadInputValue { get; private set; }
 
         public Action<int> WriteOutputValue { get; private set; }
+
         public bool WaitForInput { get; private set; }
 
         public IntCodeCpu Load(IEnumerable<int> memory)
