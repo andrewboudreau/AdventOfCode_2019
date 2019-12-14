@@ -1,11 +1,15 @@
-﻿namespace AdventOfCode_2019.Week01
+﻿using System.Numerics;
+
+namespace AdventOfCode_2019.Week01
 {
     public struct Parameter
     {
         public int Address;
-        public int Value;
+        public BigInteger Value;
         public ParameterMode Mode;
-        public int ResolvedValue;
+
+        // Dereferenced value stored at decompile time, can be useful for debugging.
+        public BigInteger ResolvedValue;
 
         public override string ToString()
         {

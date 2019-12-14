@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-
+using System.Numerics;
 using Microsoft.Extensions.Logging;
 
 namespace AdventOfCode_2019.Week01
@@ -9,17 +8,18 @@ namespace AdventOfCode_2019.Week01
     public class IntCodeCpu
     {
         private readonly ILogger logger;
+        private readonly IntCodeCpuMemory memory;
 
-        private int[] memory;
         private int pc;
         private int steps;
 
-        public IntCodeCpu(ILogger logger)
+        public IntCodeCpu(ILogger logger, IntCodeCpuMemory memory)
         {
             this.logger = logger;
+            this.memory = memory;
         }
 
-        public int this[int index]
+        public BigInteger this[int index]
         {
             get
             {
@@ -29,20 +29,18 @@ namespace AdventOfCode_2019.Week01
 
         public long Steps => steps;
 
-        public int LastOutput { get; private set; }
+        public BigInteger LastOutput { get; private set; }
 
-        public Func<int> ReadInputValue { get; private set; }
+        public Func<BigInteger> ReadInputValue { get; private set; }
 
-        public Action<int> WriteOutputValue { get; private set; }
+        public Action<BigInteger> WriteOutputValue { get; private set; }
 
-        public bool WaitForInput { get; private set; }
-
-        public IntCodeCpu Load(IEnumerable<int> memory)
+        public IntCodeCpu Load(BigInteger[] program)
         {
             Reset();
-            this.memory = memory.ToArray();
+            memory.Load(program);
 
-            logger.LogTrace($"Loaded program {this.memory.Length:N0} bytes.");
+            logger.LogTrace($"Loaded program {program.Length:N0} bytes.");
             return this;
         }
 
@@ -54,10 +52,18 @@ namespace AdventOfCode_2019.Week01
             return this;
         }
 
+        public IntCodeCpu Continue(BigInteger value)
+        {
+            ReadInputValue = () => value;
+            return this;
+        }
+
         public IntCodeCpu Reset()
         {
             pc = 0;
             steps = 0;
+            memory.Reset();
+
             return this;
         }
 
@@ -83,7 +89,7 @@ namespace AdventOfCode_2019.Week01
 
         public int Execute(Instruction instruction)
         {
-            int result;
+            BigInteger result;
 
             switch (instruction.Operation)
             {
@@ -98,20 +104,13 @@ namespace AdventOfCode_2019.Week01
                     break;
 
                 case Operations.Input:
-                    //if (!WaitForInput)
-                    //{
-                    //    WaitForInput = true;
-                    //    return 0;
-                    //};
-
-                    //WaitForInput = false;
-                    int input;
+                    BigInteger input;
                     if (ReadInputValue == null)
                     {
                         throw new InvalidOperationException("ReadInputValue should not be null");
-                        ////Console.Write("Input a value: ");
-                        ////input = int.Parse(Console.ReadLine());
-                        ////Console.WriteLine(input.ToString());
+                        //Console.Write("Input a value: ");
+                        //input = int.Parse(Console.ReadLine());
+                        //Console.WriteLine(input.ToString());
                     }
                     else
                     {
@@ -132,19 +131,19 @@ namespace AdventOfCode_2019.Week01
                  * Opcode 6 is jump-if-false: if the first parameter is zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
                */
 
-                case Operations.Jump_If_True:
+                case Operations.JumpIfTrue:
                     if (instruction.ReadOperand1(memory) != 0)
                     {
-                        pc = instruction.ReadOperand2(memory);
+                        pc = (int)instruction.ReadOperand2(memory);
                         return 0;
                     }
 
                     break;
 
-                case Operations.Jump_If_False:
+                case Operations.JumpIfFalse:
                     if (instruction.ReadOperand1(memory) == 0)
                     {
-                        pc = instruction.ReadOperand2(memory);
+                        pc = (int)instruction.ReadOperand2(memory);
                         return 0;
                     }
                     break;
@@ -175,6 +174,10 @@ namespace AdventOfCode_2019.Week01
                     }
                     break;
 
+                case Operations.SetRelativeBase:
+                    memory.SetRelativeBase((int)instruction.ReadOperand1(memory));
+                    break;
+
                 case Operations.Halt:
                     throw new HaltException($"Program Halted with M[0]={memory[0].ToString("N0")}");
 
@@ -187,16 +190,16 @@ namespace AdventOfCode_2019.Week01
 
         public void Run()
         {
-            while (Step() && !WaitForInput) { }
+            while (Step()) { }
         }
 
-        public IntCodeCpu UseConstantValueForInput(int value)
+        public IntCodeCpu UseConstantValueForInput(BigInteger value)
         {
             ReadInputValue = () => value;
             return this;
         }
 
-        public IntCodeCpu UseSequenceForInput(params int[] value)
+        public IntCodeCpu UseSequenceForInput(params BigInteger[] value)
         {
             var i = 0;
             ReadInputValue = () =>
@@ -208,7 +211,7 @@ namespace AdventOfCode_2019.Week01
             return this;
         }
 
-        public IntCodeCpu UseInitialValueThenOutputs(int value, IntCodeCpu inputCpu)
+        public IntCodeCpu UseInitialValueThenOutputs(BigInteger value, IntCodeCpu inputCpu)
         {
             var first = false;
             ReadInputValue = () =>
@@ -225,7 +228,7 @@ namespace AdventOfCode_2019.Week01
             return this;
         }
 
-        public IntCodeCpu UseBufferForOutput(List<int> output)
+        public IntCodeCpu UseBufferForOutput(List<BigInteger> output)
         {
             WriteOutputValue = value =>
             {
@@ -238,7 +241,7 @@ namespace AdventOfCode_2019.Week01
 
         public IntCodeCpu UseLoggingForOutput()
         {
-            WriteOutputValue = (value) => logger.LogWarning($"Output: {value}");
+            WriteOutputValue = (value) => logger.LogCritical($"Output: {value}");
             return this;
         }
 

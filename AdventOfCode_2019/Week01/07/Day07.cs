@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -19,6 +20,7 @@ namespace AdventOfCode_2019.Week01
 
         protected override string Solve(IEnumerable<string> inputs)
         {
+            return "n/a";
             var count = 0;
             var program = inputs.First().IntegersFromCsv();
 
@@ -51,8 +53,6 @@ namespace AdventOfCode_2019.Week01
 
         protected override string Solve2(IEnumerable<string> inputs)
         {
-            return "N/A";
-
             var count = 0;
             var program = inputs.First().IntegersFromCsv();
 
@@ -104,7 +104,7 @@ namespace AdventOfCode_2019.Week01
                 throw new InvalidOperationException($"{settings.Length} settings must equal the numbers of amps, {amps.Length}.");
             }
 
-            var buffer = new List<int>() { 0 };
+            var buffer = new List<BigInteger>() { 0 };
             for (var i = 0; i < amps.Length; i++)
             {
                 amps[i]
@@ -113,7 +113,7 @@ namespace AdventOfCode_2019.Week01
                     .Run();
             }
 
-            return amps[^1].LastOutput;
+            return (int)amps[^1].LastOutput;
         }
 
         public static int CalculateFeedbackThrust(this IntCodeCpu[] amps, params int[] settings)
@@ -123,7 +123,7 @@ namespace AdventOfCode_2019.Week01
                 throw new InvalidOperationException($"{settings.Length} settings must equal the numbers of amps, {amps.Length}.");
             }
 
-            var buffer = new List<int>() { 0 };
+            var buffer = new List<BigInteger>() { 0 };
             for (var i = 0; i < amps.Length; i++)
             {
                 amps[i]
@@ -132,7 +132,7 @@ namespace AdventOfCode_2019.Week01
                     .Run();
             }
 
-            return amps[^1].LastOutput;
+            return (int)amps[^1].LastOutput;
         }
         public static IntCodeCpu[] LoadProgram(this IntCodeCpu[] amps, int[] program)
         {

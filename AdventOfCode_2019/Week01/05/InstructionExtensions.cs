@@ -1,27 +1,37 @@
-﻿namespace AdventOfCode_2019.Week01
+﻿using System.Numerics;
+
+namespace AdventOfCode_2019.Week01
 {
     public static class InstructionExtensions
     {
-        public static int ReadOperand1(this Instruction instruction, int[] memory)
+        public static BigInteger ReadOperand(this Instruction instruction, IntCodeCpuMemory memory, int index)
         {
-            int index = 0;
             return memory.Read(instruction.Parameters[index].Address, instruction.Parameters[index].Mode);
         }
 
-        public static int ReadOperand2(this Instruction instruction, int[] memory)
+        public static BigInteger ReadOperand1(this Instruction instruction, IntCodeCpuMemory memory)
         {
-            int index = 1;
-            return memory.Read(instruction.Parameters[index].Address, instruction.Parameters[index].Mode);
+            return ReadOperand(instruction, memory, 0);
         }
 
-        public static void WriteOperand1(this Instruction instruction, int value, int[] memory)
+        public static BigInteger ReadOperand2(this Instruction instruction, IntCodeCpuMemory memory)
         {
-            memory.Write(value, instruction.Parameters[0].Address, instruction.Parameters[0].Mode);
+            return ReadOperand(instruction, memory, 1);
         }
 
-        public static void WriteOperand3(this Instruction instruction, int value, int[] memory)
+        public static void WriteOperand(this Instruction instruction, BigInteger value, IntCodeCpuMemory memory, int index)
         {
-            memory.Write(value, instruction.Parameters[2].Address, instruction.Parameters[2].Mode);
+            memory.Write(value, instruction.Parameters[index].Address, instruction.Parameters[index].Mode);
+        }
+
+        public static void WriteOperand1(this Instruction instruction, BigInteger value, IntCodeCpuMemory memory)
+        {
+            WriteOperand(instruction, value, memory, 0);
+        }
+
+        public static void WriteOperand3(this Instruction instruction, BigInteger value, IntCodeCpuMemory memory)
+        {
+            WriteOperand(instruction, value, memory, 2);
         }
     }
 }

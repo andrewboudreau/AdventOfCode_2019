@@ -17,7 +17,7 @@ namespace AdventOfCode_2019
 
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
 
-            var day = serviceProvider.GetRequiredService<Day08>();
+            var day = serviceProvider.GetRequiredService<Day09>();
 
             logger.LogCritical($"Solution: {day.Solve()}");
             logger.LogCritical($"Solution Part 2: {day.Solve2()}");
@@ -43,8 +43,7 @@ namespace AdventOfCode_2019
             services.AddTransient<Day07>();
             services.AddTransient<Day08>();
             services.AddTransient<Day09>();
-
-            ////services.AddTransient<Day10>();
+            services.AddTransient<Day10>();
             ////services.AddTransient<Day11>();
             ////services.AddTransient<Day12>();
             ////services.AddTransient<Day13>();
@@ -56,7 +55,8 @@ namespace AdventOfCode_2019
             ////services.AddTransient<Day19>();
 
             services.AddTransient(sp => new IntCodeCpu_old(sp.GetRequiredService<ILogger<IntCodeCpu_old>>()));
-            services.AddTransient(sp => new IntCodeCpu(sp.GetRequiredService<ILogger<IntCodeCpu>>()));
+            services.AddTransient(sp => new IntCodeCpuMemory(sp.GetRequiredService<ILogger<IntCodeCpuMemory>>()));
+            services.AddTransient(sp => new IntCodeCpu(sp.GetRequiredService<ILogger<IntCodeCpu>>(), sp.GetRequiredService<IntCodeCpuMemory>()));
 
             return services.BuildServiceProvider();
         }

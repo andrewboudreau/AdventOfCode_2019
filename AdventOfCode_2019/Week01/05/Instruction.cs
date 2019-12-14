@@ -13,12 +13,12 @@ namespace AdventOfCode_2019.Week01
         public readonly int ParameterCount;
         public readonly List<Parameter> Parameters;
 
-        public Instruction(int address, int[] memory)
+        public Instruction(int address, IntCodeCpuMemory memory)
         {
             const int opcodeSize = 1;
             Address = address;
 
-            OperationCode = memory.Read(address, ParameterMode.Immediate);
+            OperationCode = (int)memory.Read(address, ParameterMode.Immediate);
             Operation = (Operations)(OperationCode % 100);
 
             Size = InstructionSizeLookup(Operation);
@@ -27,11 +27,11 @@ namespace AdventOfCode_2019.Week01
 
             for (var i = 0; i < ParameterCount; i++)
             {
-                var parameterCodes = OperationCode / 100;
-                var parameterAddress = i + (address + opcodeSize);
+                int parameterCodes = OperationCode / 100;
+                int parameterAddress = i + (address + opcodeSize);
                 int divider = (int)Math.Pow(10, i);
                 int parameterBit = parameterCodes / divider;
-                var parameterModeValue = parameterBit % 10;
+                int parameterModeValue = parameterBit % 10;
                 var parameterMode = (ParameterMode)parameterModeValue;
 
                 var parameter = new Parameter()
@@ -56,12 +56,13 @@ namespace AdventOfCode_2019.Week01
                 case Operations.Less_Than:
                     return 3;
 
-                case Operations.Jump_If_False:
-                case Operations.Jump_If_True:
+                case Operations.JumpIfFalse:
+                case Operations.JumpIfTrue:
                     return 2;
 
                 case Operations.Input:
                 case Operations.Output:
+                case Operations.SetRelativeBase:
                     return 1;
 
                 case Operations.Halt:

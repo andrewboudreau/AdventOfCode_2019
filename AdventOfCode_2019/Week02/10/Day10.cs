@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace AdventOfCode_2019.Week01
 {
     public class Day10 : Day00
     {
-        public Day10(IServiceProvider serviceProvider, ILogger<Day07> logger)
+        public Day10(IServiceProvider serviceProvider, ILogger<Day10> logger)
             : base(serviceProvider, logger)
         {
-            //DirectInput = new[] { "123456789012", "3", "2" };
+            DirectInput = new[] { "" };
         }
 
         protected override string Solve(IEnumerable<string> inputs)
         {
-            var data = inputs.ToList();
             return "N/a";
         }
 

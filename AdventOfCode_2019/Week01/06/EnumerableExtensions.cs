@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace AdventOfCode_2019
 {
@@ -18,6 +19,10 @@ namespace AdventOfCode_2019
         public static int[] IntegersFromCsv(this string csv)
         {
             return csv.Split(",").Select(x => int.Parse(x.Trim())).ToArray();
+        }
+        public static BigInteger[] ToProgram(this string csv)
+        {
+            return csv.Split(",").Select(x => BigInteger.Parse(x.Trim())).ToArray();
         }
     }
 }

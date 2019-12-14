@@ -8,6 +8,9 @@ namespace AdventOfCode_2019.Week01
         Position = 0,
 
         [Description("Immediate")]
-        Immediate = 1
+        Immediate = 1,
+
+        [Description("Relative")]
+        Relative = 2
     }
 }

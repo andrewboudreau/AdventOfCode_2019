@@ -78,7 +78,7 @@ namespace AdventOfCode_2019.Week01
             logger.LogDebug($"Executed {cpu.Steps} operations.");
             logger.LogDebug($"End {cpu.DumpMemory()}");
 
-            return cpu.LastOutput;
+            return (int)cpu.LastOutput;
         }
     }
 }
