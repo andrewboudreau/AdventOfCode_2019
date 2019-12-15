@@ -27,12 +27,13 @@ namespace AdventOfCode_2019
 
         private static ServiceProvider ConfigureServices(ServiceCollection services)
         {
-            services.AddLogging(configure => configure.AddConsole().SetMinimumLevel(LogLevel.Trace));
+            var loggingProvider = new CustomLoggerProvider();
+            services.AddLogging(configure => configure.ClearProviders().AddProvider(loggingProvider).SetMinimumLevel(LogLevel.Debug));
 
             var serviceProvider = services.BuildServiceProvider();
+            LogFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
             services.AddSingleton(typeof(ILogger), logger);
-            LogFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
 
             services.AddTransient<Day01>();
             services.AddTransient<Day02>();

@@ -55,9 +55,14 @@ namespace AdventOfCode_2019
 
         public virtual void AssertExpectedResult(int expected, int actual)
         {
+            AssertExpectedResult(expected.ToString("N0"), actual.ToString("N0"));
+        }
+
+        public virtual void AssertExpectedResult(string expected, string actual)
+        {
             if (expected != actual)
             {
-                throw new InvalidOperationException($"Expected known correct answer '{expected:N0}' but returned '{actual:N0}'");
+                throw new InvalidOperationException($"Expected known correct answer '{expected}' but returned '{actual}'");
             }
         }
 
@@ -73,7 +78,7 @@ namespace AdventOfCode_2019
             return "N/A";
         }
 
-        private static string fileGuid = Guid.NewGuid().ToString("N").Substring(0,3);
+        private static string fileGuid = Guid.NewGuid().ToString("N").Substring(0, 3);
 
         static protected void SaveToFile(string msg)
         {

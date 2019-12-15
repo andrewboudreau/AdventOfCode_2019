@@ -20,7 +20,7 @@ namespace AdventOfCode_2019.Week01
         {
             if (mode == ParameterMode.Relative)
             {
-                memory[(int)memory[address] + memory.RelativeBase] = value;
+                return memory[(int)memory[address] + memory.RelativeBase] = value;
             }
 
             return mode == ParameterMode.Position
