@@ -9,7 +9,10 @@ namespace AdventOfCode_2019
     public abstract class Day00
     {
         private const string DefaultFileName = "input.dat";
+        public const string FullBlock = "█";
+
         protected readonly ILogger logger;
+
 
         public Day00(IServiceProvider serviceProvider, ILogger<Day00> logger)
         {

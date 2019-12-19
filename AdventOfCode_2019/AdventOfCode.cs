@@ -17,7 +17,7 @@ namespace AdventOfCode_2019
 
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
 
-            var day = serviceProvider.GetRequiredService<Day10>();
+            var day = serviceProvider.GetRequiredService<Day11>();
 
             logger.LogCritical($"Solution: {day.Solve()}");
             logger.LogCritical($"Solution Part 2: {day.Solve2()}");
@@ -45,6 +45,7 @@ namespace AdventOfCode_2019
             services.AddTransient<Day08>();
             services.AddTransient<Day09>();
             services.AddTransient<Day10>();
+            services.AddTransient<Day11>();
             ////services.AddTransient<Day11>();
             ////services.AddTransient<Day12>();
             ////services.AddTransient<Day13>();

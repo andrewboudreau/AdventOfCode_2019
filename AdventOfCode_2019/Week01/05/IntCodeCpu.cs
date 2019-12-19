@@ -107,10 +107,10 @@ namespace AdventOfCode_2019.Week01
                     BigInteger input;
                     if (ReadInputValue == null)
                     {
-                        throw new InvalidOperationException("ReadInputValue should not be null");
-                        //Console.Write("Input a value: ");
-                        //input = int.Parse(Console.ReadLine());
-                        //Console.WriteLine(input.ToString());
+                        ////throw new InvalidOperationException("ReadInputValue should not be null");
+                        Console.Write("Input a value: ");
+                        input = int.Parse(Console.ReadLine());
+                        Console.WriteLine(input.ToString());
                     }
                     else
                     {
@@ -191,6 +191,13 @@ namespace AdventOfCode_2019.Week01
         public void Run()
         {
             while (Step()) { }
+        }
+
+        public IntCodeCpu UseRobot(Robot robot)
+        {
+            ReadInputValue = () => new BigInteger(robot.Panels[robot.Location].Black ? 0 : 1);
+            WriteOutputValue = value => robot.AcceptCommand((int)value);
+            return this;
         }
 
         public IntCodeCpu UseConstantValueForInput(BigInteger value)
