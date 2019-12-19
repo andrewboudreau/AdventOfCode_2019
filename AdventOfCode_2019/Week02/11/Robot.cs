@@ -63,10 +63,6 @@ namespace AdventOfCode_2019
 
         internal void Paint(int white)
         {
-            if (white == 1)
-            {
-                var foo = 0;
-            }
             Panels[Location].Paint(white);
             painted.Add(Location);
         }
@@ -108,16 +104,26 @@ namespace AdventOfCode_2019
                 _ => throw new NotImplementedException($"Could not move forward when angle is {Angle}."),
             };
 
-            if (!Panels.ContainsKey(Location))
+            AddPanel(Location);
+
+            if (Location.X > RepairArea.X)
             {
-                AddPanel(Location);
+                RepairArea = new Vector2(Location.X, RepairArea.Y);
+            }
+            else if (Location.Y < RepairArea.Y)
+            {
+                // goes down for +
+                RepairArea = new Vector2(RepairArea.X, Location.Y);
             }
         }
 
         private void AddPanel(Vector2 location)
         {
-            var panel = new HullPanel(location);
-            Panels.Add(location, panel);
+            if (!Panels.ContainsKey(Location))
+            {
+                var panel = new HullPanel(location);
+                Panels.Add(location, panel);
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace AdventOfCode_2019
         {
             var program = inputs.First().ToProgram();
             var cpu = ServiceProvider.GetRequiredService<IntCodeCpu>();
-            
+
             var robot = new Robot();
             robot.Panels[new Vector2(0, 0)].Paint(1);
 
@@ -45,9 +45,9 @@ namespace AdventOfCode_2019
             var print = new StringBuilder();
             print.AppendLine();
 
-            for (var y = 0; y > -6; y--)
+            for (var y = 1; y >= robot.RepairArea.Y-1; y--)
             {
-                for (var x = 0; x < 43; x++)
+                for (var x = 0; x < robot.RepairArea.X; x++)
                 {
                     var location = new Vector2(x, y);
                     var output = robot.IsPaintedWhite(location) ? FullBlock : ".";
