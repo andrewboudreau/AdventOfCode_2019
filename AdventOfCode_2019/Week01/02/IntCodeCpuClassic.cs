@@ -6,19 +6,19 @@ using Microsoft.Extensions.Logging;
 
 namespace AdventOfCode_2019.Week01
 {
-    class IntCodeCpu_old
+    class IntCodeCpuClassic
     {
         private readonly ILogger logger;
 
         private int[] memory;
         private int pc = 0;
 
-        public IntCodeCpu_old(ILogger<IntCodeCpu_old> logger)
+        public IntCodeCpuClassic(ILogger<IntCodeCpuClassic> logger)
         {
             this.logger = logger;
         }
 
-        public IntCodeCpu_old(IEnumerable<int> memory, ILogger logger)
+        public IntCodeCpuClassic(IEnumerable<int> memory, ILogger logger)
         {
             this.memory = memory.ToArray();
             this.logger = logger;
@@ -32,7 +32,7 @@ namespace AdventOfCode_2019.Week01
 
         public long Steps { get; private set; } = 0;
 
-        public IntCodeCpu_old Load(IEnumerable<int> memory)
+        public IntCodeCpuClassic Load(IEnumerable<int> memory)
         {
             this.memory = memory.ToArray();
             pc = 0;
@@ -41,7 +41,7 @@ namespace AdventOfCode_2019.Week01
             return this;
         }
 
-        public IntCodeCpu_old Patch(int index, int value)
+        public IntCodeCpuClassic Patch(int index, int value)
         {
             logger.LogInformation($"Patched program at Memory[{index}] = '{value}' from '{memory[index]}'");
 
