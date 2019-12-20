@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AdventOfCode_2019.Week02._13
+namespace AdventOfCode_2019
 {
     public class GravitySimulation
     {
@@ -16,19 +15,36 @@ namespace AdventOfCode_2019.Week02._13
 
         public void Step()
         {
-            for (var i = 0; i < bodies.Count; i++)
+            foreach (var pair in bodies.MakePairs())
             {
-                for (var j = 0; j < bodies.Count - 1; j++)
-                {
-                    if (j == i)
-                    {
-                        continue;
-                    }
-
-                    bodies[i].StepVelocity(bodies[j].Velocity);
-                    bodies[i].StepPosition(bodies[j].Position);
-                }
+                pair.Item1.StepVelocity(pair.Item2);
             }
+
+            foreach (var body in bodies)
+            {
+                body.StepPosition();
+            }
+        }
+
+        public void Step(int steps)
+        {
+            for (var i = 0; i < steps; i++)
+            {
+                System.Console.WriteLine($"After {i} steps:");
+                System.Console.WriteLine(Print());
+                Step();
+            }
+        }
+
+        public string Print()
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var body in bodies)
+            {
+                stringBuilder.AppendLine(body.ToString());
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }
