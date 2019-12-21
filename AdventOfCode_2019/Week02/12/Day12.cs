@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace AdventOfCode_2019.Week01
@@ -29,8 +28,8 @@ namespace AdventOfCode_2019.Week01
                 <x=9, y=-8, z=-3>
             
             */
-           // DirectInput = new[] { "-8,-10,0", "5,5,10", "2,-7,3", "9,-8,-3" };
-            
+            // DirectInput = new[] { "-8,-10,0", "5,5,10", "2,-7,3", "9,-8,-3" };
+
 
             /* Puzzle
                 <x=3, y=3, z=0>
@@ -39,21 +38,40 @@ namespace AdventOfCode_2019.Week01
                 <x=-3, y=0, z=-13>
              */
 
-            // DirectInput = new[] { "3,3,0", "4,-16,2", "-10,-6,5", "-3,0,-13" };
+          //  DirectInput = new[] { "3,3,0", "4,-16,2", "-10,-6,5", "-3,0,-13" };
         }
 
         protected override string Solve(IEnumerable<string> inputs)
         {
             var bodies = inputs.Select(x => new Body(x)).ToArray();
             var simulation = new GravitySimulation(bodies);
-            simulation.Step(10);
-            return "\r\n" + simulation.Print();
+            var energies = new List<float>(1000);
+
+            simulation.OnEachStep(sim => energies.Add(sim.Energy));
+            simulation.Step(1000);
+
+            logger.LogInformation(simulation.Print());
+            AssertExpectedResult("12351", energies.Last().ToString());
+            return energies.Last().ToString();
         }
 
         protected override string Solve2(IEnumerable<string> inputs)
         {
             var bodies = inputs.Select(x => new Body(x)).ToArray();
-            return "N/a";
+
+            var simulation = new GravitySimulation(bodies);
+            var states = new HashSet<string>();
+
+            string current;
+            int count = 0;
+            do
+            {
+                simulation.Step();
+                current = simulation.State;
+                count += 1;
+            } while (states.Add(current));
+
+            return $"Ran {states.Count().ToString()} steps before reaching an existing state.";
         }
     }
 }

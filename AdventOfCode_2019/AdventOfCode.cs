@@ -27,8 +27,8 @@ namespace AdventOfCode_2019
 
         private static ServiceProvider ConfigureServices(ServiceCollection services)
         {
-            var loggingProvider = new CustomLoggerProvider();
-            services.AddLogging(configure => configure.ClearProviders().AddProvider(loggingProvider).SetMinimumLevel(LogLevel.Debug));
+            var singleLineConsoleLoggerProvider = new SingleLineConsoleLogger();
+            services.AddLogging(configure => configure.ClearProviders().AddProvider(singleLineConsoleLoggerProvider).SetMinimumLevel(LogLevel.Debug));
 
             var serviceProvider = services.BuildServiceProvider();
             LogFactory = serviceProvider.GetRequiredService<ILoggerFactory>();

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -7,11 +8,14 @@ namespace AdventOfCode_2019
     public class GravitySimulation
     {
         private readonly List<Body> bodies;
+        private Action<GravitySimulation> StepCallback;
 
         public GravitySimulation(IEnumerable<Body> bodies)
         {
             this.bodies = bodies.ToList();
         }
+
+        public float Energy => bodies.Sum(b => b.Energy);
 
         public void Step()
         {
@@ -24,14 +28,16 @@ namespace AdventOfCode_2019
             {
                 body.StepPosition();
             }
+
+            StepCallback?.Invoke(this);
         }
 
         public void Step(int steps)
         {
             for (var i = 0; i < steps; i++)
             {
-                System.Console.WriteLine($"After {i} steps:");
-                System.Console.WriteLine(Print());
+                ////System.Console.WriteLine($"After {i} steps:");
+                ////System.Console.WriteLine(Print());
                 Step();
             }
         }
@@ -45,6 +51,36 @@ namespace AdventOfCode_2019
             }
 
             return stringBuilder.ToString();
+        }
+
+        public string State
+        {
+            get
+            {
+                var state = new StringBuilder();
+                foreach (var body in bodies)
+                {
+                    state.Append(body.State);
+                }
+
+                return state.ToString();
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            var hashcode = new HashCode();
+            foreach (var body in bodies)
+            {
+                hashcode.Add(body);
+            }
+
+            return hashcode.ToHashCode();
+        }
+
+        internal void OnEachStep(Action<GravitySimulation> sim)
+        {
+            StepCallback = sim;
         }
     }
 }

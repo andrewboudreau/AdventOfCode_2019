@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AdventOfCode_2019.Week01
 {
-    public sealed class CustomLoggerProvider : ILoggerProvider
+    public sealed class SingleLineConsoleLogger : ILoggerProvider
     {
         public void Dispose() { }
 
