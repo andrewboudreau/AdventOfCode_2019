@@ -53,30 +53,39 @@ namespace AdventOfCode_2019
             return stringBuilder.ToString();
         }
 
-        public string State
+        public string StateOfAxis(int axis)
         {
-            get
+            var state = new StringBuilder();
+            switch (axis)
             {
-                var state = new StringBuilder();
-                foreach (var body in bodies)
-                {
-                    state.Append(body.State);
-                }
+                case 0:
+                    foreach (var body in bodies)
+                    {
+                        state.Append(body.StateOfAxis(axis));
+                    }
+                    break;
 
-                return state.ToString();
+                case 1:
+                    foreach (var body in bodies)
+                    {
+                        state.Append(body.StateOfAxis(axis));
+                    }
+                    break;
+
+                case 2:
+                    foreach (var body in bodies)
+                    {
+                        state.Append(body.StateOfAxis(axis));
+                    }
+                    break;
+
+                default:
+                    throw new NotSupportedException($"{axis} is not supported axis");
             }
+
+            return state.ToString();
         }
 
-        public override int GetHashCode()
-        {
-            var hashcode = new HashCode();
-            foreach (var body in bodies)
-            {
-                hashcode.Add(body);
-            }
-
-            return hashcode.ToHashCode();
-        }
 
         internal void OnEachStep(Action<GravitySimulation> sim)
         {

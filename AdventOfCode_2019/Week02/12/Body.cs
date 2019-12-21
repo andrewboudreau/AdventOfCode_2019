@@ -26,20 +26,30 @@ namespace AdventOfCode_2019
 
         public float Energy => Potential * Kinetic;
 
-        public string State
+        public string StateOfAxis(int axis)
         {
-            get
+            switch (axis)
             {
-                return $"{Position.X},{Position.Y},{Position.Z}|{Velocity.X},{Velocity.Y},{Velocity.Z}_";
+                case 0:
+                    return $"{Position.X},{Velocity.X}";
+
+                case 1:
+                    return $"{Position.Y},{Velocity.Y}";
+
+                case 2:
+                    return $"{Position.Z},{Velocity.Z}";
+
+                default:
+                    throw new NotSupportedException($"{axis} is not supported axis");
             }
         }
 
         public void StepVelocity(Body other)
         {
             var delta = new Vector3(
-                AxisVelocity(Position.X, other.Position.X),
-                AxisVelocity(Position.Y, other.Position.Y),
-                AxisVelocity(Position.Z, other.Position.Z));
+                StepAxisVelocity(Position.X, other.Position.X),
+                StepAxisVelocity(Position.Y, other.Position.Y),
+                StepAxisVelocity(Position.Z, other.Position.Z));
 
             Velocity += delta;
             other.Velocity -= delta;
@@ -60,7 +70,7 @@ namespace AdventOfCode_2019
             return HashCode.Combine(Position, Velocity);
         }
 
-        private int AxisVelocity(float mine, float other)
+        private int StepAxisVelocity(float mine, float other)
         {
             if (mine == other)
             {

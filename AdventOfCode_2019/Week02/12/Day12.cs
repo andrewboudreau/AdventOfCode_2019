@@ -18,7 +18,7 @@ namespace AdventOfCode_2019.Week01
                 <x=3, y=5, z=-1>
             */
 
-            DirectInput = new[] { "-1,0,2", "2,-10,-7", "4,-8,8", "3,5,-1" };
+            // DirectInput = new[] { "-1,0,2", "2,-10,-7", "4,-8,8", "3,5,-1" };
 
             /*
              Example 2
@@ -28,7 +28,7 @@ namespace AdventOfCode_2019.Week01
                 <x=9, y=-8, z=-3>
             
             */
-            // DirectInput = new[] { "-8,-10,0", "5,5,10", "2,-7,3", "9,-8,-3" };
+            DirectInput = new[] { "-8,-10,0", "5,5,10", "2,-7,3", "9,-8,-3" };
 
 
             /* Puzzle
@@ -38,7 +38,7 @@ namespace AdventOfCode_2019.Week01
                 <x=-3, y=0, z=-13>
              */
 
-          //  DirectInput = new[] { "3,3,0", "4,-16,2", "-10,-6,5", "-3,0,-13" };
+             DirectInput = new[] { "3,3,0", "4,-16,2", "-10,-6,5", "-3,0,-13" };
         }
 
         protected override string Solve(IEnumerable<string> inputs)
@@ -60,18 +60,52 @@ namespace AdventOfCode_2019.Week01
             var bodies = inputs.Select(x => new Body(x)).ToArray();
 
             var simulation = new GravitySimulation(bodies);
-            var states = new HashSet<string>();
+            var existingStates = new HashSet<string>[] { new HashSet<string>(), new HashSet<string>(), new HashSet<string>() };
+            var duplicateStateStep = new int[] { 0, 0, 0 };
 
-            string current;
-            int count = 0;
             do
             {
                 simulation.Step();
-                current = simulation.State;
-                count += 1;
-            } while (states.Add(current));
+                for (var currentAxis = 0; currentAxis < 3; currentAxis++)
+                {
+                    if (duplicateStateStep[currentAxis] == 0)
+                    {
+                        if (!existingStates[currentAxis].Add(simulation.StateOfAxis(currentAxis)))
+                        {
+                            duplicateStateStep[currentAxis] = existingStates[currentAxis].Count();
+                        }
+                    }
+                }
 
-            return $"Ran {states.Count().ToString()} steps before reaching an existing state.";
+            } while (duplicateStateStep.Any(x => x == 0));
+
+            var temp = LeastCommonMultiple(duplicateStateStep[0], duplicateStateStep[1]);
+            var cycleLength = LeastCommonMultiple(temp, duplicateStateStep[2]);
+            AssertExpectedResult("380635029877596", cycleLength.ToString());
+            return $"Cycles at {cycleLength}";
+        }
+
+        public static long LeastCommonMultiple(long a, long b)
+        {
+            long num1, num2;
+            if (a > b)
+            {
+                num1 = a; num2 = b;
+            }
+            else
+            {
+                num1 = b; num2 = a;
+            }
+
+            for (int i = 1; i < num2; i++)
+            {
+                if ((num1 * i) % num2 == 0)
+                {
+                    return i * num1;
+                }
+            }
+
+            return num1 * num2;
         }
     }
 }
