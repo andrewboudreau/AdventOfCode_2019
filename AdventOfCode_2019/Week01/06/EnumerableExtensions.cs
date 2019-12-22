@@ -20,9 +20,16 @@ namespace AdventOfCode_2019
         {
             return csv.Split(",").Select(x => int.Parse(x.Trim())).ToArray();
         }
+
         public static BigInteger[] ToProgram(this string csv)
         {
             return csv.Split(",").Select(x => BigInteger.Parse(x.Trim())).ToArray();
+        }
+
+        public static BigInteger[] Patch(this BigInteger[] program, int index, int value)
+        {
+            program[index] = value;
+            return program;
         }
     }
 }

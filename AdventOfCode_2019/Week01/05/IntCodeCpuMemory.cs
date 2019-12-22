@@ -6,7 +6,7 @@ namespace AdventOfCode_2019.Week01
 {
     public class IntCodeCpuMemory
     {
-        const int MemorySize = 4096;
+        const int MemorySize = 8192;
 
         readonly BigInteger[] memory = new BigInteger[MemorySize];
         private readonly ILogger<IntCodeCpuMemory> logger;

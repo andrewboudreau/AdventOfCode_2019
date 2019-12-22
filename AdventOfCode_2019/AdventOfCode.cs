@@ -10,6 +10,8 @@ namespace AdventOfCode_2019
     {
         public static ILoggerFactory LogFactory;
 
+        public static LogLevel LoggingLevel = LogLevel.Critical;
+
         public static void Main(string[] args)
         {
             using var scope = ConfigureServices().CreateScope();
@@ -17,7 +19,7 @@ namespace AdventOfCode_2019
 
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
 
-            var day = serviceProvider.GetRequiredService<Day12>();
+            var day = serviceProvider.GetRequiredService<Day13>();
 
             logger.LogCritical($"Solution: {day.Solve()}");
             logger.LogCritical($"Solution Part 2: {day.Solve2()}");
@@ -28,7 +30,8 @@ namespace AdventOfCode_2019
         private static ServiceProvider ConfigureServices(ServiceCollection services)
         {
             var singleLineConsoleLoggerProvider = new SingleLineConsoleLogger();
-            services.AddLogging(configure => configure.ClearProviders().AddProvider(singleLineConsoleLoggerProvider).SetMinimumLevel(LogLevel.Debug));
+            services
+                .AddLogging(configure => configure.ClearProviders().AddProvider(singleLineConsoleLoggerProvider).SetMinimumLevel(LoggingLevel));
 
             var serviceProvider = services.BuildServiceProvider();
             LogFactory = serviceProvider.GetRequiredService<ILoggerFactory>();

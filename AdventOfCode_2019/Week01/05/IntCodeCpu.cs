@@ -200,6 +200,71 @@ namespace AdventOfCode_2019.Week01
             return this;
         }
 
+        internal IntCodeCpu UseArcadeCabinet(ArcadeCabinet arcade)
+        {
+            var joystick = new JoyStick();
+            ReadInputValue = () =>
+            {
+                if (arcade.Ball == arcade.Paddle)
+                {
+                    return 0;
+                }
+                else if (arcade.Ball > arcade.Paddle)
+                {
+                    return 1;
+                }
+                else if (arcade.Ball< arcade.Paddle)
+                {
+                    return -1;
+                }
+                return 0;
+            };
+
+            CommandInputBuffer command = null;
+            var outputs = 0;
+
+            WriteOutputValue = value =>
+            {
+                if (command == null)
+                {
+                    command = CommandFactory.CreateCommandBuffer((int)value);
+                }
+
+                if (command.AddInput(value))
+                {
+                    if (command is UpdateTileCommand)
+                    {
+                        outputs++;
+
+                        Console.SetCursorPosition((int)command[0], (int)command[1]);
+                        Console.Write(new Tile(Vector2.One, (TileType)(int)command[2]).ToString());
+
+                        var type = (TileType)(int)command[2];
+                        if (type == TileType.Ball)
+                        {
+                            arcade.Ball = (int)command[0];
+                        }
+                        if (type == TileType.Paddle)
+                        {
+                            arcade.Paddle = (int)command[0];
+                        }
+
+                        // var tile = arcade.VideoBuffer.UpdateTileMap(position, (TileType)(int)command[2]);
+
+                    }
+                    else if (command is UpdateScoreCommand)
+                    {
+                        Console.SetCursorPosition(0,28);
+                        Console.Write($"SCORE IS: {command[2]}");
+                    }
+
+                    command = null;
+                }
+            };
+
+            return this;
+        }
+
         public IntCodeCpu UseConstantValueForInput(BigInteger value)
         {
             ReadInputValue = () => value;
