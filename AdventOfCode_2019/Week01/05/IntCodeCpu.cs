@@ -213,7 +213,7 @@ namespace AdventOfCode_2019.Week01
                 {
                     return 1;
                 }
-                else if (arcade.Ball< arcade.Paddle)
+                else if (arcade.Ball < arcade.Paddle)
                 {
                     return -1;
                 }
@@ -234,12 +234,13 @@ namespace AdventOfCode_2019.Week01
                 {
                     if (command is UpdateTileCommand)
                     {
+                        var cmd = command as UpdateTileCommand;
                         outputs++;
 
-                        Console.SetCursorPosition((int)command[0], (int)command[1]);
-                        Console.Write(new Tile(Vector2.One, (TileType)(int)command[2]).ToString());
+                        Console.SetCursorPosition(cmd.X, cmd.Y);
+                        Console.Write(new Tile(Vector2.One, cmd.TileType).ToString());
 
-                        var type = (TileType)(int)command[2];
+                        var type = cmd.TileType;
                         if (type == TileType.Ball)
                         {
                             arcade.Ball = (int)command[0];
@@ -249,13 +250,21 @@ namespace AdventOfCode_2019.Week01
                             arcade.Paddle = (int)command[0];
                         }
 
-                        // var tile = arcade.VideoBuffer.UpdateTileMap(position, (TileType)(int)command[2]);
-
+                        var tile = arcade.VideoBuffer.UpdateTileMap(new Vector2(cmd.X, cmd.Y), cmd.TileType);
+                        if (outputs < 1000 || outputs > 2000)
+                        {
+                            //System.Threading.Thread.Sleep(1);
+                        }
+                        if (outputs > 1000 && outputs < 2000)
+                        {
+                            System.Threading.Thread.Sleep(8);
+                        }
                     }
                     else if (command is UpdateScoreCommand)
                     {
-                        Console.SetCursorPosition(0,28);
+                        Console.SetCursorPosition(0, 26);
                         Console.Write($"SCORE IS: {command[2]}");
+                        arcade.HighScore = (int)command[2];
                     }
 
                     command = null;

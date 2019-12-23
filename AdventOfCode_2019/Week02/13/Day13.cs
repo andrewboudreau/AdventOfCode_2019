@@ -26,7 +26,7 @@ namespace AdventOfCode_2019
             var blockTiles = arcade.VideoBuffer.Tiles.Values.Where(x => x.Type == TileType.Block);
             AssertExpectedResult(398, blockTiles.Count());
 
-            return $"The progam starts with {blockTiles.Count()} block tiles.";
+            return $"\r\nThe progam starts with {blockTiles.Count()} block tiles.";
         }
 
         protected override string Solve2(IEnumerable<string> inputs)
@@ -36,7 +36,7 @@ namespace AdventOfCode_2019
 
             var arcade = new ArcadeCabinet(cpu, program).SetFreePlay();
 
-            return $"NA";
+            return $"{ arcade.HighScore}";
         }
     }
 
@@ -102,11 +102,6 @@ namespace AdventOfCode_2019
 
             if (!Tiles.ContainsKey(position))
             {
-                if (tileType == TileType.Paddle)
-                {
-                    var foo = 123;
-                }
-
                 Tiles.Add(position, new Tile(position, tileType));
             }
             else
@@ -116,17 +111,6 @@ namespace AdventOfCode_2019
 
             return new Tile(position, tileType);
         }
-
-        ////public IEnumerable<Tile> PrintedTiles()
-        ////{
-        ////    foreach (var position in Tiles.Keys.OrderBy(pos => pos.X).ThenBy(pos => pos.Y))
-        ////    {
-        ////        if (Tiles[position] > TileType.Empty)
-        ////        {
-        ////            yield return new Tile(position.X, position.Y, Tiles[position]);
-        ////        }
-        ////    }
-        ////}
 
         public VideoBuffer Reset()
         {
@@ -209,6 +193,7 @@ namespace AdventOfCode_2019
         public ConsoleRenderer Screen { get; }
         public int Ball { get; internal set; }
         public int Paddle { get; internal set; }
+        public int HighScore { get; internal set; }
 
         public ArcadeCabinet SetFreePlay()
         {

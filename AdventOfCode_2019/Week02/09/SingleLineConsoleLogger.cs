@@ -27,6 +27,7 @@ namespace AdventOfCode_2019.Week01
                 {
                     return;
                 }
+
                 if (logLevel == LogLevel.Critical)
                 {
                     Console.BackgroundColor = ConsoleColor.Black;
@@ -34,7 +35,7 @@ namespace AdventOfCode_2019.Week01
                 }
                 else
                 {
-                    Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
 
                 Console.WriteLine($"{logLevel.ToString().Substring(0, 1)}: {formatter(state, exception)}");

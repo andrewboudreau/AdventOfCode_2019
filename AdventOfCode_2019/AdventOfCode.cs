@@ -8,9 +8,11 @@ namespace AdventOfCode_2019
 {
     public class AdventOfCode
     {
-        public static ILoggerFactory LogFactory;
+        public const LogLevel LoggingLevel = LogLevel.Critical;
 
-        public static LogLevel LoggingLevel = LogLevel.Critical;
+        public static Type SolutionForDay = typeof(Day13);
+
+        public static ILoggerFactory LogFactory;
 
         public static void Main(string[] args)
         {
@@ -19,7 +21,7 @@ namespace AdventOfCode_2019
 
             var logger = serviceProvider.GetRequiredService<ILogger<AdventOfCode>>();
 
-            var day = serviceProvider.GetRequiredService<Day13>();
+            var day = (Day00)serviceProvider.GetRequiredService(SolutionForDay);
 
             logger.LogCritical($"Solution: {day.Solve()}");
             logger.LogCritical($"Solution Part 2: {day.Solve2()}");
@@ -51,7 +53,7 @@ namespace AdventOfCode_2019
             services.AddTransient<Day11>();
             services.AddTransient<Day12>();
             services.AddTransient<Day13>();
-            ////services.AddTransient<Day14>();
+            services.AddTransient<Day14>();
             ////services.AddTransient<Day15>();
             ////services.AddTransient<Day16>();
             ////services.AddTransient<Day17>();
