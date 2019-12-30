@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 using AdventOfCode_2019.Cpu;
@@ -118,24 +119,8 @@ namespace AdventOfCode_2019.Maze
             var xOffset = 19;
             var yOffset = 20;
 
-            Console.Clear();
-            foreach (var tile in Tiles.Values)
-            {
-                Console.SetCursorPosition(tile.Position.X + xOffset, tile.Position.Y + yOffset);
-                var print = tile.TileType switch
-                {
-                    MazeTileType.Wall => "▒",
-                    MazeTileType.Empty => "▓",
-                    MazeTileType.Goal => "@",
-                    _ => throw new NotImplementedException($"No support for rendering {tile.TileType}"),
-                };
-
-                Console.Write(print);
-            }
-
-            Console.SetCursorPosition(xOffset, yOffset);
-            Console.WriteLine("S");
-
+            Render(Tiles.Values.Select(x => x).ToList());
+            
             Console.SetCursorPosition(Position.X + xOffset, Position.Y + yOffset);
             Console.WriteLine("?");
         }
@@ -171,5 +156,63 @@ namespace AdventOfCode_2019.Maze
                 }
             }
         }
+
+        public static IEnumerable<Direction> GetDirections()
+        {
+            yield return Direction.Up;
+            yield return Direction.Right;
+            yield return Direction.Down;
+            yield return Direction.Left;
+        }
+
+        public static IEnumerable<(int X, int Y)> GetNeighbors((int X, int Y) position)
+        {
+            foreach (var direction in GetDirections())
+            {
+                (int X, int Y) = direction switch
+                {
+                    Direction.Up => (0, 1),
+                    Direction.Down => (0, -1),
+                    Direction.Left => (-1, 0),
+                    Direction.Right => (1, 0),
+                    _ => throw new NotImplementedException($"Foward should never be '{direction}'"),
+                };
+
+                yield return (position.X + X, position.Y + Y);
+            }
+        }
+
+        public static IEnumerable<MazeMovementOption> GetNeighbors((int X, int Y) tile, List<MazeMovementOption> maze)
+        {
+            foreach (var (X, Y) in GetNeighbors(tile))
+            {
+                yield return maze.Single(m => m.Position.X == X && m.Position.Y == Y);
+            }
+        }
+
+        public static void Render(List<MazeMovementOption> tiles)
+        {
+            var xOffset = 19;
+            var yOffset = 20;
+
+            Console.Clear();
+            foreach (var tile in tiles)
+            {
+                Console.SetCursorPosition(tile.Position.X + xOffset, tile.Position.Y + yOffset);
+                var print = tile.TileType switch
+                {
+                    MazeTileType.Wall => "▒",
+                    MazeTileType.Empty => tile.Resolved.ToString().Last().ToString(),
+                    MazeTileType.Goal => "@",
+                    _ => throw new NotImplementedException($"No support for rendering {tile.TileType}"),
+                };
+
+                Console.Write(print);
+            }
+
+            Console.SetCursorPosition(xOffset, yOffset);
+            Console.WriteLine("S");
+        }
+
     }
 }

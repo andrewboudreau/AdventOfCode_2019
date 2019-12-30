@@ -83,9 +83,17 @@ namespace AdventOfCode_2019
 
         private static string fileGuid = Guid.NewGuid().ToString("N").Substring(0, 3);
 
-        static protected void SaveToFile(string msg)
+        static protected string SaveToFile(string msg)
         {
-            File.AppendAllText($"out-{fileGuid}.txt", msg);
+            var file = $"out-{fileGuid}.txt";
+            File.AppendAllText(file, msg);
+            return file;
+        }
+
+        static protected string[] ReadFile(string file = null)
+        {
+            var path = file ?? new DirectoryInfo("./").GetFiles().OrderByDescending(f => f.LastWriteTime).First(x => x.Name.StartsWith("out")).Name;
+            return File.ReadAllLines(path);
         }
     }
 }

@@ -1,7 +1,15 @@
-﻿namespace AdventOfCode_2019.Maze
+﻿using System;
+using System.Collections.Generic;
+
+namespace AdventOfCode_2019.Maze
 {
     public class MazeMovementOption
     {
+        public MazeMovementOption(params string[] inputs)
+            : this((int.Parse(inputs[0]), int.Parse(inputs[1])), (MazeTileType)Enum.Parse(typeof(MazeTileType), inputs[2].ToString()))
+        {
+        }
+
         public MazeMovementOption((int X, int Y) position, MazeTileType tileType)
         {
             Position = position;

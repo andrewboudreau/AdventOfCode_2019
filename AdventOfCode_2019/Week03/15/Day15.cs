@@ -5,6 +5,7 @@ using AdventOfCode_2019.Maze;
 using AdventOfCode_2019.Cpu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace AdventOfCode_2019
 {
@@ -27,6 +28,14 @@ namespace AdventOfCode_2019
             var maze = new MazeWalker(cpu, program);
             maze.Run().Render();
 
+            var data = new StringBuilder();
+            foreach (var tile in maze.Tiles.Values.OrderBy(x => x.Position.X).ThenBy(x => x.Position.Y))
+            {
+                data.AppendLine($"{tile.Position.X},{tile.Position.Y},{tile.TileType}");
+            }
+
+            SaveToFile(data.ToString());
+
             return "Maze Rendered";
         }
 
@@ -35,9 +44,30 @@ namespace AdventOfCode_2019
             var cpu = ServiceProvider.GetRequiredService<IntCodeCpu>();
             var program = inputs.First().ToProgram();
 
-            var maze = new MazeWalker(cpu, program);
-            var result = cpu.LastOutput;
+            var minutes = 0;
+            var maze = ReadFile().Select(x => new MazeMovementOption(x.Split(","))).ToList();
+            var hasOxygen = maze.Where(x => x.TileType == MazeTileType.Goal).ToList();
 
+            while (hasOxygen.Any(x => x.Resolved == 0))
+            {
+                foreach (var tile in hasOxygen.Where(x => x.Resolved == 0).ToList())
+                {
+                    foreach (var neighbor in MazeWalker.GetNeighbors(tile.Position, maze))
+                    {
+                        if (neighbor.TileType == MazeTileType.Empty)
+                        {
+                            tile.Resolved = minutes;
+                            hasOxygen.Add(neighbor);
+                        }
+                    }
+                }
+
+                minutes++;
+            }
+
+            MazeWalker.Render(maze);
+
+            var result = maze.Max(x => x.Resolved);
             return result.ToString();
         }
     }
