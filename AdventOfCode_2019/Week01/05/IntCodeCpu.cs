@@ -193,84 +193,34 @@ namespace AdventOfCode_2019.Week01
             while (Step()) { }
         }
 
-        public IntCodeCpu UseRobot(Robot robot)
+        public void StepUntil(Func<IntCodeCpu, bool> predicate)
         {
-            ReadInputValue = () => new BigInteger(robot.Panels[robot.Location].Black ? 0 : 1);
-            WriteOutputValue = value => robot.AcceptCommand((int)value);
+            while (Step() && predicate(this))
+            {
+            }
+        }
+
+        public IntCodeCpu Input(Func<BigInteger> input)
+        {
+            ReadInputValue = input;
             return this;
         }
 
-        internal IntCodeCpu UseArcadeCabinet(ArcadeCabinet arcade)
+        public IntCodeCpu Input(Func<int> input)
         {
-            var joystick = new JoyStick();
-            ReadInputValue = () =>
-            {
-                if (arcade.Ball == arcade.Paddle)
-                {
-                    return 0;
-                }
-                else if (arcade.Ball > arcade.Paddle)
-                {
-                    return 1;
-                }
-                else if (arcade.Ball < arcade.Paddle)
-                {
-                    return -1;
-                }
-                return 0;
-            };
+            ReadInputValue = () => new BigInteger(input());
+            return this;
+        }
 
-            CommandInputBuffer command = null;
-            var outputs = 0;
+        public IntCodeCpu Output(Action<BigInteger> output)
+        {
+            WriteOutputValue = output;
+            return this;
+        }
 
-            WriteOutputValue = value =>
-            {
-                if (command == null)
-                {
-                    command = CommandFactory.CreateCommandBuffer((int)value);
-                }
-
-                if (command.AddInput(value))
-                {
-                    if (command is UpdateTileCommand)
-                    {
-                        var cmd = command as UpdateTileCommand;
-                        outputs++;
-
-                        Console.SetCursorPosition(cmd.X, cmd.Y);
-                        Console.Write(new Tile(Vector2.One, cmd.TileType).ToString());
-
-                        var type = cmd.TileType;
-                        if (type == TileType.Ball)
-                        {
-                            arcade.Ball = (int)command[0];
-                        }
-                        if (type == TileType.Paddle)
-                        {
-                            arcade.Paddle = (int)command[0];
-                        }
-
-                        var tile = arcade.VideoBuffer.UpdateTileMap(new Vector2(cmd.X, cmd.Y), cmd.TileType);
-                        if (outputs < 1000 || outputs > 2000)
-                        {
-                            //System.Threading.Thread.Sleep(1);
-                        }
-                        if (outputs > 1000 && outputs < 2000)
-                        {
-                            System.Threading.Thread.Sleep(8);
-                        }
-                    }
-                    else if (command is UpdateScoreCommand)
-                    {
-                        Console.SetCursorPosition(0, 26);
-                        Console.Write($"SCORE IS: {command[2]}");
-                        arcade.HighScore = (int)command[2];
-                    }
-
-                    command = null;
-                }
-            };
-
+        public IntCodeCpu Output(Action<int> output)
+        {
+            WriteOutputValue = bi => output((int)bi);
             return this;
         }
 
@@ -278,6 +228,11 @@ namespace AdventOfCode_2019.Week01
         {
             ReadInputValue = () => value;
             return this;
+        }
+
+        public IntCodeCpu UseConstantValueForInput(int value)
+        {
+            return UseConstantValueForInput(new BigInteger(value));
         }
 
         public IntCodeCpu UseSequenceForInput(params BigInteger[] value)

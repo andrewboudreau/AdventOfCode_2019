@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode_2019
+﻿namespace AdventOfCode_2019.Arcade
 {
     public class UpdateTileCommand : CommandInputBuffer
     {

@@ -23,9 +23,10 @@ namespace AdventOfCode_2019
             var cpu = ServiceProvider.GetRequiredService<IntCodeCpu>();
             var robot = new Robot();
 
-            cpu.Load(program);
-            cpu.UseRobot(robot);
-            cpu.Run();
+            cpu.Load(program)
+                .Input(robot.IsPaintedWhite)
+                .Output(robot.AcceptCommand)
+                .Run();
 
             return $"{robot.PanitedPanelsCount}";
         }
@@ -39,13 +40,14 @@ namespace AdventOfCode_2019
             robot.Panels[new Vector2(0, 0)].Paint(1);
 
             cpu.Load(program)
-                .UseRobot(robot)
+                .Input(robot.IsPaintedWhite)
+                .Output(robot.AcceptCommand)
                 .Run();
 
             var print = new StringBuilder();
             print.AppendLine();
 
-            for (var y = 1; y >= robot.RepairArea.Y-1; y--)
+            for (var y = 1; y >= robot.RepairArea.Y - 1; y--)
             {
                 for (var x = 0; x < robot.RepairArea.X; x++)
                 {

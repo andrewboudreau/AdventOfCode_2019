@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AdventOfCode_2019.Week01;
 using Microsoft.Extensions.Logging;
@@ -30,34 +31,35 @@ namespace AdventOfCode_2019
             var reactions = inputs.Select(x => new Reaction(x)).ToList();
             var root = reactions.Single(x => x.Output.Symbol == "FUEL");
 
-            var current = root;
-            var tree = new Node<Reactant>(root.Output);
+            var reactants = new Dictionary<Reactant, List<Reactant>>();
+            //var node = new Node<Reactant>();
 
-
-            // traverse teh tree till every node ends in ORE
-
-            var todo = new Stack<Node<Reactant>>();
-
-        PARSE_INPUT:
-            foreach (var input in current.Input)
+            foreach (var reaction in reactions)
             {
-                var node = new Node<Reactant>(input);
-                tree.Right.Add(node);
-
-                var candidate = reactions.SingleOrDefault(x => x.Output.Equals(input));
-                if (candidate != null)
+                if (!reactants.ContainsKey(reaction.Output))
                 {
-                    foreach(var )
-                    todo.Push(candidate.Input);
+                    reactants.Add(reaction.Output, new List<Reactant>());
                 }
             }
 
-            var search = current.Input.FirstOrDefault();
+            var reactionsFromOreOnly = reactions
+                .Where(x => x.Input.Any(x => x.Equals("ORE")))
+                .ToList();
 
+            var level = reactions
+                .Where(x => x.Input.Any(y => reactionsFromOreOnly.Any(r => r.Output.Equals(y))))
+                .ToList();
 
-            if (current != null)
-                goto PARSE_INPUT;
+            //foreach (var reactant in reactants)
+            //{
+            //    if (reactant.Value.Last().Symbol == "ORE")
+            //    {
+            //        Console.WriteLine("done");
+            //    }
+            //}
+            // traverse teh tree till every node ends in ORE
 
+            // var todo = new Stack<Node<Reactant>>();
             return "";
         }
 
@@ -98,7 +100,7 @@ namespace AdventOfCode_2019
             }
         }
 
-        public class Reactant : IEquatable<Reactant>
+        public class Reactant : IEquatable<Reactant>, IEquatable<string>
         {
             public Reactant(string symbol, int value)
             {
@@ -117,7 +119,7 @@ namespace AdventOfCode_2019
                     return 1;
                 }
 
-                return count % Value;
+                return (int)Math.Ceiling(count / (double)Value);
             }
 
             public override string ToString()
@@ -125,24 +127,74 @@ namespace AdventOfCode_2019
                 return $"{Value} {Symbol}";
             }
 
-            public bool Equals(Reactant other)
-            {
-                if (other == null)
-                {
-                    return false;
-                }
-
-                return other.Symbol == Symbol;
-            }
-
             public override bool Equals(object obj)
             {
                 return Equals(obj as Reactant);
             }
 
+            public bool Equals(Reactant other)
+            {
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                if (other is null)
+                {
+                    return false;
+                }
+
+                return Symbol == other.Symbol;
+            }
+
+            public bool Equals([AllowNull] string other)
+            {
+                return Symbol == other;
+            }
+
             public override int GetHashCode()
             {
                 return HashCode.Combine(Symbol);
+            }
+
+            public static bool operator ==(Reactant obj1, Reactant obj2)
+            {
+                if (ReferenceEquals(obj1, obj2))
+                {
+                    return true;
+                }
+
+                if (obj1 is null)
+                {
+                    return false;
+                }
+
+                return obj1.Equals(obj2);
+            }
+
+            public static bool operator !=(Reactant obj1, Reactant obj2)
+            {
+                return !(obj1 == obj2);
+            }
+
+            public static bool operator ==(Reactant reactant, string symbol)
+            {
+                if (reactant is null)
+                {
+                    return false;
+                }
+
+                if (symbol is null)
+                {
+                    return false;
+                }
+
+                return reactant.Symbol.Equals(symbol, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public static bool operator !=(Reactant reactant, string symbol)
+            {
+                return !(reactant == symbol);
             }
         }
     }

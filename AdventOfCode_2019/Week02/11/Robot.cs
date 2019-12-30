@@ -28,6 +28,11 @@ namespace AdventOfCode_2019
 
         public int PanitedPanelsCount => painted.Count;
 
+        public BigInteger IsPaintedWhite()
+        {
+            return IsPaintedWhite(Location) ? 1 : 0;
+        }
+
         public bool IsPaintedWhite(Vector2 inspect)
         {
             if (Panels.ContainsKey(inspect))

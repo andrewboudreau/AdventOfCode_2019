@@ -8,7 +8,7 @@ namespace AdventOfCode_2019
 {
     public class AdventOfCode
     {
-        public const LogLevel LoggingLevel = LogLevel.Critical;
+        public const LogLevel LoggingLevel = LogLevel.Debug;
 
         public static Type SolutionForDay = typeof(Day13);
 
@@ -54,7 +54,7 @@ namespace AdventOfCode_2019
             services.AddTransient<Day12>();
             services.AddTransient<Day13>();
             services.AddTransient<Day14>();
-            ////services.AddTransient<Day15>();
+            services.AddTransient<Day15>();
             ////services.AddTransient<Day16>();
             ////services.AddTransient<Day17>();
             ////services.AddTransient<Day18>();
