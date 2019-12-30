@@ -51,11 +51,13 @@
     <None Update="Week03\15\15_input.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Week03\16\16_input.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="foo\" />
-    <Folder Include="Week03\16\" />
     <Folder Include="Week03\17\" />
     <Folder Include="Week03\18\" />
     <Folder Include="Week03\19\" />
