@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AdventOfCode_2019.Arcade;
+using AdventOfCode_2019.Cpu;
 using AdventOfCode_2019.Week01;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using AdventOfCode_2019.Week01;
 using Microsoft.Extensions.Logging;
 
-namespace AdventOfCode_2019.Week01
+namespace AdventOfCode_2019.Cpu
 {
     public class IntCodeCpu
     {

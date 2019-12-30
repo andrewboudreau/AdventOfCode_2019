@@ -1,4 +1,5 @@
 ﻿using System;
+using AdventOfCode_2019.Cpu;
 using AdventOfCode_2019.Week01;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,7 @@ namespace AdventOfCode_2019
     {
         public const LogLevel LoggingLevel = LogLevel.Debug;
 
-        public static Type SolutionForDay = typeof(Day13);
+        public static Type SolutionForDay = typeof(Day15);
 
         public static ILoggerFactory LogFactory;
 

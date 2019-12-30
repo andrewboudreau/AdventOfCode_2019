@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AdventOfCode_2019.Week01
+namespace AdventOfCode_2019.Cpu
 {
     public enum Operations
     {

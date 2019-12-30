@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using AdventOfCode_2019.Cpu;
 using AdventOfCode_2019.Week01;
 
 namespace AdventOfCode_2019.Arcade

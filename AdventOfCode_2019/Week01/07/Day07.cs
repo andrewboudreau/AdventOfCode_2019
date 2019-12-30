@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using AdventOfCode_2019.Cpu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +22,7 @@ namespace AdventOfCode_2019.Week01
         protected override string Solve(IEnumerable<string> inputs)
         {
             var count = 0;
-            var program = inputs.First().IntegersFromCsv();
+            var program = inputs.First().ToProgram();
 
             var settings = new int[] { 0, 1, 2, 3, 4 };
             (int MaxThrust, int[] Inputs) result = (0, new int[5]);
@@ -54,7 +55,7 @@ namespace AdventOfCode_2019.Week01
         {
             return "part2 n/a";
             var count = 0;
-            var program = inputs.First().IntegersFromCsv();
+            var program = inputs.First().ToProgram();
 
             var settings = new int[] { 5, 6, 7, 8, 9 };
             (int MaxThrust, int[] Inputs) result = (0, new int[5]);
@@ -134,7 +135,8 @@ namespace AdventOfCode_2019.Week01
 
             return (int)amps[^1].LastOutput;
         }
-        public static IntCodeCpu[] LoadProgram(this IntCodeCpu[] amps, int[] program)
+
+        public static IntCodeCpu[] LoadProgram(this IntCodeCpu[] amps, BigInteger[] program)
         {
             for (var i = 0; i < amps.Length; i++)
             {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AdventOfCode_2019.Week01
+namespace AdventOfCode_2019.Cpu
 {
     public partial struct Instruction
     {

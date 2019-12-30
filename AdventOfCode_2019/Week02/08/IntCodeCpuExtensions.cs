@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using AdventOfCode_2019.Week01;
 
-namespace AdventOfCode_2019
+namespace AdventOfCode_2019.Cpu
 {
     public static class IntCodeCpuExtensions
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AdventOfCode_2019.Cpu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

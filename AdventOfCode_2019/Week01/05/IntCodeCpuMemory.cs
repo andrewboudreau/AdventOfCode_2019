@@ -1,8 +1,9 @@
-﻿using System;
+﻿
+using System;
 using System.Numerics;
 using Microsoft.Extensions.Logging;
 
-namespace AdventOfCode_2019.Week01
+namespace AdventOfCode_2019.Cpu
 {
     public class IntCodeCpuMemory
     {

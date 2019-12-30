@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using AdventOfCode_2019.Cpu;
 using Microsoft.Extensions.Logging;
 
 namespace AdventOfCode_2019.Week01

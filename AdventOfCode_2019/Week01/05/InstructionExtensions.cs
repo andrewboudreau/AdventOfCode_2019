@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace AdventOfCode_2019.Week01
+namespace AdventOfCode_2019.Cpu
 {
     public static class InstructionExtensions
     {

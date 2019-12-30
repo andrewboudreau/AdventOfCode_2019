@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using AdventOfCode_2019.Week01;
+using AdventOfCode_2019.Maze;
+using AdventOfCode_2019.Cpu;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -41,7 +42,10 @@ namespace AdventOfCode_2019
             return result.ToString();
         }
     }
+}
 
+namespace AdventOfCode_2019.Maze
+{
     public class MazeWalker
     {
         private readonly IntCodeCpu cpu;
