@@ -11,7 +11,7 @@ namespace AdventOfCode_2019
     {
         public const LogLevel LoggingLevel = LogLevel.Debug;
 
-        public static Type SolutionForDay = typeof(Day16);
+        public static Type SolutionForDay = typeof(Day17);
 
         public static ILoggerFactory LogFactory;
 
@@ -57,9 +57,15 @@ namespace AdventOfCode_2019
             services.AddTransient<Day14>();
             services.AddTransient<Day15>();
             services.AddTransient<Day16>();
-            ////services.AddTransient<Day17>();
+            services.AddTransient<Day17>();
             ////services.AddTransient<Day18>();
             ////services.AddTransient<Day19>();
+            ////services.AddTransient<Day20>();
+            ////services.AddTransient<Day21>();
+            ////services.AddTransient<Day22>();
+            ////services.AddTransient<Day23>();
+            ////services.AddTransient<Day24>();
+            ////services.AddTransient<Day25>();
 
             services.AddTransient(sp => new IntCodeCpuClassic(sp.GetRequiredService<ILogger<IntCodeCpuClassic>>()));
             services.AddTransient(sp => new IntCodeCpuMemory(sp.GetRequiredService<ILogger<IntCodeCpuMemory>>()));
