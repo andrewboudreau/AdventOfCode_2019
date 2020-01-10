@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text;
 using AdventOfCode_2019.Week01;
 using Microsoft.Extensions.Logging;
 
@@ -243,6 +244,35 @@ namespace AdventOfCode_2019.Cpu
             {
                 logger.LogTrace($"Input: {value[i % value.Length]:N0}");
                 return value[i++ % value.Length];
+            };
+
+            return this;
+        }
+
+        public IntCodeCpu UseSequenceForInput(params int[] value)
+        {
+            var i = 0;
+            ReadInputValue = () =>
+            {
+                return value[i++ % value.Length];
+            };
+
+            return this;
+        }
+
+        public IntCodeCpu UseAsciiForInput(params string[] values)
+        {
+            var input = string.Join('\n', values) + '\n';
+            var iterator = input.GetEnumerator();
+
+            ReadInputValue = () =>
+            {
+                if (iterator.MoveNext())
+                {
+                    return iterator.Current;
+                }
+
+                throw new InvalidOperationException();
             };
 
             return this;

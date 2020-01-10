@@ -38,40 +38,19 @@ namespace AdventOfCode_2019.Maze
 
         public void Turn()
         {
-            Direction = Direction switch
-            {
-                Direction.Up => Direction.Right,
-                Direction.Right => Direction.Down,
-                Direction.Down => Direction.Left,
-                Direction.Left => Direction.Up,
-                _ => throw new NotImplementedException($"Foward should never be '{Direction}'"),
-            };
+            Direction = Direction.TurnRight();
         }
 
         public void TurnLeft()
         {
-            Direction = Direction switch
-            {
-                Direction.Up => Direction.Left,
-                Direction.Right => Direction.Up,
-                Direction.Down => Direction.Right,
-                Direction.Left => Direction.Down,
-                _ => throw new NotImplementedException($"Foward should never be '{Direction}'"),
-            };
+            Direction = Direction.TurnLeft();
         }
 
         public Direction DirectionLeft
         {
             get
             {
-                return Direction switch
-                {
-                    Direction.Up => Direction.Left,
-                    Direction.Right => Direction.Up,
-                    Direction.Down => Direction.Right,
-                    Direction.Left => Direction.Down,
-                    _ => throw new NotImplementedException($"Foward should never be '{Direction}'"),
-                };
+                return Direction.TurnLeft();
             }
         }
 
@@ -83,7 +62,7 @@ namespace AdventOfCode_2019.Maze
                 Direction.Down => (0, -1),
                 Direction.Left => (-1, 0),
                 Direction.Right => (1, 0),
-                _ => throw new NotImplementedException($"Foward should never be '{Direction}'"),
+                _ => throw new NotImplementedException($"Forward should never be '{Direction}'"),
             };
 
             return (Position.X + X, Position.Y + Y);
@@ -110,7 +89,7 @@ namespace AdventOfCode_2019.Maze
             }
             else
             {
-                throw new NotImplementedException($"Foward should never be '{step}'");
+                throw new NotImplementedException($"Forward should never be '{step}'");
             }
         }
 
@@ -120,7 +99,7 @@ namespace AdventOfCode_2019.Maze
             var yOffset = 20;
 
             Render(Tiles.Values.Select(x => x).ToList());
-            
+
             Console.SetCursorPosition(Position.X + xOffset, Position.Y + yOffset);
             Console.WriteLine("?");
         }
@@ -169,16 +148,7 @@ namespace AdventOfCode_2019.Maze
         {
             foreach (var direction in GetDirections())
             {
-                (int X, int Y) = direction switch
-                {
-                    Direction.Up => (0, 1),
-                    Direction.Down => (0, -1),
-                    Direction.Left => (-1, 0),
-                    Direction.Right => (1, 0),
-                    _ => throw new NotImplementedException($"Foward should never be '{direction}'"),
-                };
-
-                yield return (position.X + X, position.Y + Y);
+                yield return position.Forward(direction);
             }
         }
 
@@ -213,6 +183,5 @@ namespace AdventOfCode_2019.Maze
             Console.SetCursorPosition(xOffset, yOffset);
             Console.WriteLine("S");
         }
-
     }
 }
